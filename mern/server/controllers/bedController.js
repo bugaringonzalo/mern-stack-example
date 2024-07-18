@@ -49,4 +49,16 @@ export const deleteBed = async (req, res) => {
   }
 };
 
-export default { createBed, getBeds, updateBed, deleteBed };
+export const getBedById = async (req, res) => {
+  try {
+    const bed = await Bed.findById(req.params.id);
+    if (!bed) {
+      return res.status(404).json({ message: 'Bed not found' });
+    }
+    res.json(bed);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export default { createBed, getBeds, updateBed, deleteBed, getBedById };

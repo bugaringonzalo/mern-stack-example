@@ -7,6 +7,7 @@ import { bedSchema } from '../utils/validationSchemas.js';
 
 router.post('/', auth, validateRequest(bedSchema), bedController.createBed);
 router.get('/', bedController.getBeds);
+router.get('/:id', bedController.getBedById);
 router.put('/:id', auth, validateRequest(bedSchema), bedController.updateBed);
 router.delete('/:id', auth, bedController.deleteBed);
 

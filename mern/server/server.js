@@ -8,6 +8,7 @@ import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import reservationsRoutes from './routes/reservations.js';
 import bedsRoutes from './routes/beds.js';
+import availabilityRoutes from './routes/availability.js';
 
 const app = express();
 
@@ -27,9 +28,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/reservations', reservationsRoutes);
 app.use('/api/beds', bedsRoutes);
+app.use('/api/availability', availabilityRoutes);
+
 
 // Error handling middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000 || process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
