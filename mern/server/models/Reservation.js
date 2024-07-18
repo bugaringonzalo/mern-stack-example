@@ -6,6 +6,19 @@ const ReservationSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  userName: {
+    type: String,
+    required: true
+  },
+  userEmail: {
+    type: String,
+    required: true
+  },
+  createdByUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   bedId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Bed',

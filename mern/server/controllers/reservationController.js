@@ -1,5 +1,7 @@
 import Reservation from '../models/Reservation.js';
 import Bed from '../models/Bed.js';
+// import the User collection so i can add the user id and the name and mail of the user to the reservation
+import User from '../models/User.js';
 
 export const createReservation = async (req, res, next) => {
     try {
@@ -22,6 +24,12 @@ export const createReservation = async (req, res, next) => {
       startOfDay.setHours(0, 0, 0, 0);
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
+
+      const userInfo = await User.findById(req.user._id).select('name email');
+
+      if (!userInfo) {
+        return res.status(404).json({ message: 'User not found' });
+      }
   
       const userReservationsCount = await Reservation.countDocuments({
         userId: req.user._id,
@@ -34,6 +42,9 @@ export const createReservation = async (req, res, next) => {
   
       const reservation = new Reservation({
         userId: req.user._id,
+        userName: userInfo.name,
+        userEmail: userInfo.email,
+        createdByUserId: req.user._id,
         bedId,
         date,
         time

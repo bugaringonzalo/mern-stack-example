@@ -2,11 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Box, Card, CardContent, Grid } from '@mui/material';
 import axios from 'axios';
 
+interface Bed {
+    _id: number;
+    name: string;
+    description: string;
+}
+
 interface Reservation {
-  id: number;
+  _id: number;
   date: string;
   time: string;
-  bedId: number;
+  bedId: Bed;
 }
 
 const Dashboard: React.FC = () => {
@@ -20,7 +26,7 @@ const Dashboard: React.FC = () => {
 
   const fetchUpcomingReservations = async () => {
     try {
-      const response = await axios.get('/api/reservations/upcoming');
+      const response = await axios.get('/api/reservations/');
       setUpcomingReservations(response.data);
     } catch (error) {
       console.error('Error fetching upcoming reservations:', error);
@@ -36,6 +42,21 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const dateFormat = (date: string) => {
+    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    const d = new Date(date);
+    const dayName = days[d.getDay()];
+    const day = d.getDate();
+    const monthName = months[d.getMonth()];
+    const year = d.getFullYear();
+  
+    return `${dayName} ${day} de ${monthName} ${year}`;
+  }
+
+  
+
   return (
     <Box sx={{ flexGrow: 1, padding: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -49,9 +70,9 @@ const Dashboard: React.FC = () => {
                 Upcoming Reservations
               </Typography>
               {upcomingReservations.map((reservation) => (
-                <Box key={reservation.id} sx={{ mb: 2 }}>
+                <Box key={reservation._id} sx={{ mb: 2 }}>
                   <Typography>
-                    Date: {reservation.date}, Time: {reservation.time}, Bed: {reservation.bedId}
+                    Date: {dateFormat(reservation.date)}, Time: {reservation.time}, Bed: {reservation.bedId.name}
                   </Typography>
                 </Box>
               ))}

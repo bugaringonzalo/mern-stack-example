@@ -4,10 +4,20 @@ import axios from 'axios';
 
 interface Reservation {
   _id: number;
+  userName: string;
+  userEmail: string;
+  createdByUserId: number;
   date: string;
   time: string;
   bedId: Bed;
-  userId: number;
+  userId: User;
+}
+
+interface User {
+    _id: number;
+    name: string;
+    email: string;
+    role: ['user', 'admin'];
 }
 
 interface Bed {
@@ -81,20 +91,20 @@ const AdminPanel: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Date</TableCell>
+                <TableCell>User Name</TableCell>
                 <TableCell>Time</TableCell>
                 <TableCell>Bed ID</TableCell>
-                <TableCell>User ID</TableCell>
+                <TableCell>Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {reservations.length > 0 ? reservations.map((reservation) => (
                 <TableRow key={reservation._id}>
                   <TableCell>{reservation._id}</TableCell>
+                  <TableCell>{reservation.userName}</TableCell>
                   <TableCell>{reservation.date}</TableCell>
                   <TableCell>{reservation.time}</TableCell>
                   <TableCell>{reservation.bedId.name}</TableCell>
-                  <TableCell>{reservation.userId}</TableCell>
                 </TableRow>
               ))
                 : <TableRow>
