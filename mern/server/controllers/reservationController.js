@@ -106,4 +106,13 @@ export const deleteReservation = async (req, res) => {
     }
 };
 
-export default { createReservation, getReservations, updateReservation, deleteReservation };
+export const getReservationsByUserId = async (req, res) => {
+  try {
+    const reservations = await Reservation.find({ userId: req.params.userId });
+    res.json(reservations);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { createReservation, getReservations, updateReservation, deleteReservation, getReservationsByUserId };

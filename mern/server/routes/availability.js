@@ -7,6 +7,11 @@ import validateRequest from '../middleware/validate.js';
 import { availabilitySchema } from '../utils/validationSchemas.js';
 
 router.get('/',auth, availabilityController.getBedsAvailables);
+router.get('/by-date',auth, availabilityController.getAvailabilityByDate);
+
+router.get('/bed-date',auth, availabilityController.getAvailabilityByBedAndDate);
+// router.get('/all',auth, availabilityController.getAvailabilities);
+
 
 
 

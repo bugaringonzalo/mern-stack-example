@@ -9,5 +9,7 @@ router.post('/', auth, validateRequest(reservationSchema), reservationController
 router.get('/', auth, reservationController.getReservations);
 router.put('/:id', auth, validateRequest(reservationSchema), reservationController.updateReservation);
 router.delete('/:id', auth, reservationController.deleteReservation);
+//** Get reservations by userId */
+router.get('/user/:userId', auth, reservationController.getReservationsByUserId);
 
 export default router;

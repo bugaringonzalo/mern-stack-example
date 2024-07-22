@@ -23,8 +23,8 @@ export const bedSchema = Joi.object({
 });
 
 export const availabilitySchema = Joi.object({
-  bedId: Joi.string().required(),
+  bedId: Joi.string().optional(),
   date: Joi.date().iso().required(), // YYYY-MM-DD
-  time: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/).required(), // HH:MM
-  isAvailable: Joi.boolean().required()
+  time: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/).optional(), // HH:MM
+  isAvailable: Joi.boolean().optional()
 });

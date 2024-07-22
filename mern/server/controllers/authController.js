@@ -50,4 +50,16 @@ export const login = async (req, res) => {
   }
 };
 
-export default { register, login };
+//** a function to return to the authContext so that i can manage all the userInfo, for example the id, or the name, or email, through all the application */
+export const me = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+export default { register, login, me };
