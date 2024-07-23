@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.js';
 import reservationsRoutes from './routes/reservations.js';
 import bedsRoutes from './routes/beds.js';
 import availabilityRoutes from './routes/availability.js';
+import usersRoutes from './routes/users.js';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/reservations', reservationsRoutes);
 app.use('/api/beds', bedsRoutes);
 app.use('/api/availability', availabilityRoutes);
+app.use('/api/users', usersRoutes);
 
 
 // Error handling middleware

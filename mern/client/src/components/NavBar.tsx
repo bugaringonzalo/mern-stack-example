@@ -16,9 +16,9 @@ const Navbar = () => {
           <>
             <Button color="inherit" component={RouterLink} to="/dashboard">Dashboard</Button>
             <Button color="inherit" component={RouterLink} to="/booking">Book a Session</Button>
-            <Button color="inherit" component={RouterLink} to="/admin">Admin Panel</Button>
-            <Button color="inherit" component={RouterLink} to="/login">Login</Button>
-            <Button color="inherit" component={RouterLink} to="/register">Register</Button>
+            {user.role === 'admin' && (
+              <Button color="inherit" component={RouterLink} to="/admin">Admin Panel</Button>
+            )}
             <Button color="inherit" onClick={logout}>Logout</Button>
           </>
         ) : (

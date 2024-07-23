@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard.tsx';
 import AdminPanel from './components/AdminPanel.tsx';
 import BookingSystem from './components/BookingSystem.tsx';
 import PrivateRoute from './components/PrivateRoute.tsx';
+import AdminRoute from './components/AdminRoute.tsx';
 
 // Use a different variable name for the created theme to avoid conflict
 const appTheme = createTheme();
@@ -27,7 +28,7 @@ const App: React.FC = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                <Route path="/admin" element={<PrivateRoute><AdminPanel /></PrivateRoute>} />
+                <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
                 <Route path="/booking" element={<PrivateRoute><BookingSystem /></PrivateRoute>} />
                 <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               </Routes>

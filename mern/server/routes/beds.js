@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import bedController from '../controllers/bedController.js';
-import auth from '../middleware/auth.js';
+import { auth } from '../middleware/auth.js';
 import validateRequest from '../middleware/validate.js';
 import { bedSchema } from '../utils/validationSchemas.js';
 

@@ -17,9 +17,18 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'admin', 'teacher'],
     default: 'user'
-  }
+  },
+  // resetPasswordToken: String,
+  // resetPasswordExpire: Date,
+  // isEmailVerified: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // emailVerificationToken: String,
+  // emailVerificationExpire: Date,
+  // validateBeforeSave: false
 }, { timestamps: true });
 
 UserSchema.pre('save', async function(next) {

@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import reservationController from '../controllers/reservationController.js';
-import auth from '../middleware/auth.js';
+import { auth } from '../middleware/auth.js';
 import validateRequest from '../middleware/validate.js';
 import { reservationSchema } from '../utils/validationSchemas.js';
 

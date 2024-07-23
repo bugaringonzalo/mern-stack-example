@@ -3,6 +3,10 @@ import axios from 'axios';
 
 interface User {
   token: string;
+  role?: string;
+  name?: string;
+  email?: string;
+  id?: string;
 }
 
 interface AuthContextType {
@@ -22,26 +26,56 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   if (!axios.defaults.baseURL) {
     axios.defaults.baseURL = 'http://localhost:5000';
-}
+  }
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser({ token });
-    }
-    setLoading(false);
+    const loadUser = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          const response = await axios.get('/api/auth/me');
+          const userData = response.data;
+          setUser({ 
+            token,
+            id: userData.id,
+            name: userData.name,
+            email: userData.email,
+            role: userData.role
+          });
+          console.log('User Info:', userData);
+          console.log('User:', user);
+        } catch (error) {
+          console.error('Error loading user data:', error);
+          localStorage.removeItem('token');
+          delete axios.defaults.headers.common['Authorization'];
+        }
+      }
+      setLoading(false);
+      
+    };
+
+    loadUser();
+    console.log('User:', user);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      const { token } = response.data;
+      const response = await axios.post('/api/auth/login', { email, password });
+      const { token, user } = response.data;
       localStorage.setItem('token', token);
+      
+
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser({ token });
+      setUser({ 
+        token, 
+        id: user.id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role 
+      });
       return true;
     } catch (error) {
       console.error('Login error:', error);
@@ -51,11 +85,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
-      const { token } = response.data;
+      const response = await axios.post('/api/auth/register', { name, email, password });
+      const { token, user } = response.data;
       localStorage.setItem('token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser({ token });
+      setUser({ 
+        token,
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      });
       return true;
     } catch (error) {
       console.error('Registration error:', error);
@@ -74,5 +114,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-
 };
