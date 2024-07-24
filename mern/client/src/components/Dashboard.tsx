@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
 
   const fetchUpcomingReservations = async () => {
     try {
-      const response = await axios.get('/api/reservations/');
+      const response = await axios.get('/api/reservations/mine');
       setUpcomingReservations(response.data);
     } catch (error) {
       console.error('Error fetching upcoming reservations:', error);
@@ -114,8 +114,8 @@ const Dashboard: React.FC = () => {
           <TableBody>
             {upcomingReservations.map((reservation) => (
               <TableRow key={reservation._id}>
-                <TableCell>{reservation.date}</TableCell>
-                <TableCell>{`${reservation.time}:00`}</TableCell>
+                <TableCell>{dateFormat(reservation.date)}</TableCell>
+                <TableCell>{reservation.time}</TableCell>
                 <TableCell>{reservation.bedId.name}</TableCell>
                 <TableCell>{reservation.userId.email}</TableCell> {/* Add this line */}
                 <TableCell>

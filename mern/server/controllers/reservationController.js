@@ -57,9 +57,65 @@ export const createReservation = async (req, res, next) => {
     }
   };
 
+// a function that creates reservations with a user id and a bed id and a date and a time
+export const createReservationByAdmin = async (req, res, next) => {
+  try {
+    const { bedId, date, time, userId } = req.body;
+    
+    // Check if the bed exists
+    const bed = await Bed.findById(bedId);
+    if (!bed) {
+      return res.status(404).json({ message: 'Bed not found' });
+    }
+
+    // Check if the bed is already reserved for the given date and time
+    const existingReservation = await Reservation.findOne({ bedId, date, time });
+    if (existingReservation) {
+      return res.status(400).json({ message: 'This bed is already reserved for the given time' });
+    }
+
+    // Check if the user has already made 3 reservations for the given date
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const userInfo = await User.findById(userId).select('name email');
+
+    if (!userInfo) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // const userReservationsCount = await Reservation.countDocuments({
+    //   userId: userId,
+    //   date: { $gte: startOfDay, $lte: endOfDay }
+    // });
+
+    // if (userReservationsCount >= 3) {
+    //   return res.status(400).json({ message: 'You can only make 3 reservations per day' });
+    // }
+
+    const reservation = new Reservation({
+      userId: userId,
+      userName: userInfo.name,
+      userEmail: userInfo.email,
+      createdByUserId: req.user._id,
+      bedId,
+      date,
+      time
+    });
+
+    await reservation.save();
+    res.status(201).json(reservation);
+  } catch (error) {
+      next(error);
+  }
+}
+
+
 export const getReservations = async (req, res) => {
   try {
-    const reservations = await Reservation.find({ userId: req.user._id }).populate('bedId');
+    const reservations = await Reservation.find().populate('bedId userId');
     res.json(reservations);
     } catch (error) {
         next(error);
@@ -106,13 +162,25 @@ export const deleteReservation = async (req, res) => {
     }
 };
 
+export const deleteReservationByAdmin = async (req, res) => {
+  try {
+    const reservation = await Reservation.findOneAndDelete({ _id: req.params.id });
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+    res.json({ message: 'Reservation deleted successfully' });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const getReservationsByUserId = async (req, res) => {
   try {
-    const reservations = await Reservation.find({ userId: req.params.userId });
+    const reservations = await Reservation.find({ userId: req.user._id }).populate('bedId userId');
     res.json(reservations);
   } catch (error) {
     next(error);
   }
 };
 
-export default { createReservation, getReservations, updateReservation, deleteReservation, getReservationsByUserId };
+export default { createReservation, getReservations, updateReservation, deleteReservation, getReservationsByUserId, createReservationByAdmin, deleteReservationByAdmin };
